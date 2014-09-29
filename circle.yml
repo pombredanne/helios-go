@@ -1,0 +1,14 @@
+dependencies:
+    pre:
+        - mkdir -p $GOPATH/src/github.com/spotify
+        - cp -r `pwd` $GOPATH/src/github.com/spotify/helios-go
+    override:
+        - cd $GOPATH/src/github.com/spotify/helios-go && go get -v ./...
+
+test:
+    override:
+        - cd $GOPATH/src/github.com/spotify/helios-go && go test -v ./...
+
+machine:
+    environment:
+        GOPATH: $HOME/gopath

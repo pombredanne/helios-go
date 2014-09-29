@@ -1,4 +1,4 @@
-helios-go [![Build Status](https://travis-ci.org/spotify/helios-go.svg?branch=master)](https://travis-ci.org/spotify/helios-go)
+helios-go [![Circle CI](https://circleci.com/gh/spotify/helios-go.png?style=badge)](https://circleci.com/gh/spotify/helios-go)
 =========
 
 Go client for Helios
