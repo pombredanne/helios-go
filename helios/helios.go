@@ -1,24 +1,26 @@
 package helios
 
 type Port struct {
-	ExternalPort float64 `json:"externalPort"`
-	InternalPort float64 `json:"internalPort"`
-	Protocol     string  `json:"protocol"`
+	ExternalPort int    `json:"externalPort"`
+	InternalPort int    `json:"internalPort"`
+	Protocol     string `json:"protocol"`
+}
+
+type Registration struct {
+	Ports map[string]struct{} `json:"ports"`
 }
 
 type Job struct {
-	Command     []interface{}   `json:"command"`
-	Env         struct{}        `json:"env"`
-	Expires     interface{}     `json:"expires"`
-	GracePeriod interface{}     `json:"gracePeriod"`
-	ID          string          `json:"id"`
-	Image       string          `json:"image"`
-	Ports       map[string]Port `json:"ports"`
-
-	// Registration parameters for service discovery, not currently implemented by this client.
-	Registration       struct{}          `json:"registration"`
-	RegistrationDomain string            `json:"registrationDomain"`
-	Volumes            map[string]string `json:"volumes"`
+	Command            []string                `json:"command"`
+	Env                map[string]string       `json:"env"`
+	Expires            int64                   `json:"expires"`
+	GracePeriod        int64                   `json:"gracePeriod"`
+	ID                 string                  `json:"id"`
+	Image              string                  `json:"image"`
+	Ports              map[string]Port         `json:"ports"`
+	Registration       map[string]Registration `json:"registration"`
+	RegistrationDomain string                  `json:"registrationDomain"`
+	Volumes            map[string]string       `json:"volumes"`
 }
 
 type TaskStatus struct {
@@ -40,8 +42,8 @@ type HostStatus struct {
 		SpecName       string   `json:"specName"`
 		SpecVendor     string   `json:"specVendor"`
 		SpecVersion    string   `json:"specVersion"`
-		StartTime      float64  `json:"startTime"`
-		Uptime         float64  `json:"uptime"`
+		StartTime      int64    `json:"startTime"`
+		Uptime         int64    `json:"uptime"`
 		Version        string   `json:"version"`
 		VmName         string   `json:"vmName"`
 		VmVendor       string   `json:"vmVendor"`
@@ -51,8 +53,8 @@ type HostStatus struct {
 	Environment map[string]string `json:"environment"`
 
 	HostInfo struct {
-		Architecture  string  `json:"architecture"`
-		Cpus          float64 `json:"cpus"`
+		Architecture  string `json:"architecture"`
+		Cpus          int    `json:"cpus"`
 		DockerVersion struct {
 			ApiVersion    string `json:"apiVersion"`
 			Arch          string `json:"arch"`
@@ -64,12 +66,12 @@ type HostStatus struct {
 		} `json:"dockerVersion"`
 		Hostname         string  `json:"hostname"`
 		LoadAvg          float64 `json:"loadAvg"`
-		MemoryFreeBytes  float64 `json:"memoryFreeBytes"`
-		MemoryTotalBytes float64 `json:"memoryTotalBytes"`
+		MemoryFreeBytes  int64   `json:"memoryFreeBytes"`
+		MemoryTotalBytes int64   `json:"memoryTotalBytes"`
 		OsName           string  `json:"osName"`
 		OsVersion        string  `json:"osVersion"`
-		SwapFreeBytes    float64 `json:"swapFreeBytes"`
-		SwapTotalBytes   float64 `json:"swapTotalBytes"`
+		SwapFreeBytes    int64   `json:"swapFreeBytes"`
+		SwapTotalBytes   int64   `json:"swapTotalBytes"`
 		Uname            string  `json:"uname"`
 	} `json:"hostInfo"`
 
