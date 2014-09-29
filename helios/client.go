@@ -21,6 +21,7 @@ type Client struct {
 	BaseURL *url.URL
 
 	Hosts *HostsService
+	Jobs  *JobsService
 }
 
 // NewClient returns a new Helios client for talking to (one of) the
@@ -52,6 +53,7 @@ func NewClientForURL(masterURL *url.URL, httpClient *http.Client) *Client {
 	c := &Client{client: httpClient, BaseURL: masterURL}
 
 	c.Hosts = &HostsService{client: c}
+	c.Jobs = &JobsService{client: c}
 
 	return c
 }
