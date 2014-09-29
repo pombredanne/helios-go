@@ -27,25 +27,33 @@ type Client struct {
 // Helios masters in the provided domain. The Helios masters are discovered
 // via SRV lookup. Optionally you may also provide your own http.Client.
 func NewClient(domain string, httpClient *http.Client) (*Client, error) {
-	if httpClient == nil {
-		httpClient = http.DefaultClient
-	}
-
 	_, addrs, err := net.LookupSRV(srvService, srvProtocol, domain)
 	if err != nil {
 		return nil, err
 	}
 
-	baseURL, err := url.Parse(fmt.Sprintf("http://%v:%d/", addrs[0].Target, addrs[0].Port))
+	masterURL, err := url.Parse(fmt.Sprintf("http://%v:%d/", addrs[0].Target, addrs[0].Port))
 	if err != nil {
 		return nil, err
 	}
 
-	c := &Client{client: httpClient, BaseURL: baseURL}
+	return NewClientForURL(masterURL, httpClient), nil
+}
+
+// NewClientForURL returns a new Helios client for talking to a Helios master at
+// an explicitly specified URL. Optionall you may also provide your own http.Client.
+// This method is useful when you don't have SRV records setup, or when you want to
+// talk to a specific Helios master in a cluster.
+func NewClientForURL(masterURL *url.URL, httpClient *http.Client) *Client {
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+
+	c := &Client{client: httpClient, BaseURL: masterURL}
 
 	c.Hosts = &HostsService{client: c}
 
-	return c, nil
+	return c
 }
 
 func (c *Client) NewRequest(method, path string) (*http.Request, error) {
