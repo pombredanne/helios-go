@@ -91,3 +91,25 @@ func (c *Client) Do(req *http.Request, v interface{}) error {
 
 	return nil
 }
+
+func (c *Client) Version() (string, error) {
+	req, err := c.NewRequest("GET", "/version")
+
+	var version string
+	if c.Do(req, &version) != nil {
+		return "", err
+	}
+
+	return version, nil
+}
+
+func (c *Client) Masters() ([]string, error) {
+	req, err := c.NewRequest("GET", "/masters")
+
+	var masters []string
+	if c.Do(req, &masters) != nil {
+		return nil, err
+	}
+
+	return masters, nil
+}

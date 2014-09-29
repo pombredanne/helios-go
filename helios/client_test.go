@@ -1,9 +1,12 @@
 package helios
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"reflect"
+	"testing"
 )
 
 // Testing approach here inspired by the github client from Google:
@@ -30,4 +33,48 @@ func setup() {
 
 func teardown() {
 	testServer.Close()
+}
+
+func TestVersion(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testMux.HandleFunc("/version", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			fmt.Fprint(w, `"0.8.17"`)
+		}
+	})
+
+	actual, err := client.Version()
+
+	if err != nil {
+		t.Errorf("Version returned error: %v", err)
+	}
+
+	expected := "0.8.17"
+	if actual != expected {
+		t.Errorf("Version returned %v, expected %v", actual, expected)
+	}
+}
+
+func TestMasters(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testMux.HandleFunc("/masters", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			fmt.Fprint(w, `["master1", "master2"]`)
+		}
+	})
+
+	actual, err := client.Masters()
+
+	if err != nil {
+		t.Errorf("Masters returned error: %v", err)
+	}
+
+	expected := []string{"master1", "master2"}
+	if !reflect.DeepEqual(actual, expected) {
+		t.Errorf("Masters returned %v, expected %v", actual, expected)
+	}
 }
